@@ -1,0 +1,6 @@
+@VolleyBallSchedule_HostAddress = https://localhost:7105
+
+GET {{VolleyBallSchedule_HostAddress}}/api/v1/User/test/
+Accept: application/json
+
+###
