@@ -21,12 +21,29 @@ public class UserController : ControllerBase
     
     [AllowAnonymous]
     [HttpPost("add")]
-    public async Task<IActionResult> Add(string name, string nickname)
+    public async Task<IActionResult> Add(string name, string nickname, int gender)
     {
         var request = new AddNewPlayerRequest
         {
             Name = name,
-            NickName = nickname
+            NickName = nickname,
+            Gender = gender
+        };
+        
+        var response = await _mediator.Send(request);
+        return StatusCode(response.Code, response);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("edit")]
+    public async Task<IActionResult> Edit(int id, string name = "", string nickname = "", int gender = 0)
+    {
+        var request = new EditPlayerRequest
+        {
+            Id = id,
+            Name = name,
+            NickName = nickname,
+            Gender = gender
         };
         
         var response = await _mediator.Send(request);

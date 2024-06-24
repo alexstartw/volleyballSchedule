@@ -25,5 +25,9 @@ public class PlayersEFMap : IEntityTypeConfiguration<Players>
             .HasColumnName("nickname")
             .HasMaxLength(128)
             .IsRequired();
+
+        builder.Property(x => x.Gender)
+            .HasColumnName("gender")
+            .IsRequired();
     }
 }

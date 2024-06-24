@@ -21,7 +21,8 @@ public class AddNewPlayerHandler : IRequestHandler<AddNewPlayerRequest, ApiResul
         var player = new Players
         {
             Name = request.Name,
-            NickName = request.NickName
+            NickName = request.NickName,
+            Gender = request.Gender
         };
 
         try

@@ -25,4 +25,15 @@ public class PlayerRepo : IPlayerRepo
         var player = await _context.Players.FirstOrDefaultAsync(x => x.Name == name);
         return player != null;
     }
+
+    public Players GetPlayerById(int id)
+    {
+        return _context.Players.FirstOrDefault(x => x.Id == id);
+    }
+    
+    public int UpdatePlayer(Players player)
+    {
+        _context.Players.Update(player);
+        return _context.SaveChanges();
+    }
 }
