@@ -8,4 +8,5 @@ public interface IPlayerRepo
     Task<bool> CheckPlayerExist(string name);
     Players GetPlayerById(int id);
     int UpdatePlayer(Players player);
+    int DeletePlayer(int id);
 }

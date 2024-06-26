@@ -36,4 +36,13 @@ public class PlayerRepo : IPlayerRepo
         _context.Players.Update(player);
         return _context.SaveChanges();
     }
+    
+    public int DeletePlayer(int id)
+    {
+        var player = _context.Players.FirstOrDefault(x => x.Id == id);
+        if (player == null)
+            return 0;
+        _context.Players.Remove(player);
+        return _context.SaveChanges();
+    }
 }

@@ -49,4 +49,17 @@ public class UserController : ControllerBase
         var response = await _mediator.Send(request);
         return StatusCode(response.Code, response);
     }
+    
+    [AllowAnonymous]
+    [HttpGet("delete")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var request = new DeletePlayerRequest
+        {
+            Id = id
+        };
+        
+        var response = await _mediator.Send(request);
+        return StatusCode(response.Code, response);
+    }
 }
