@@ -9,20 +9,18 @@ namespace VolleyBallSchedule.Services;
 
 public class LineBotService : ILineBotService
 {
-    private readonly string channelAccessToken =
-        "Nymkrl34iylj+EFYqahkp3RW+7fdmWs1fywCoO2gcPfGbX31H9JMtBI1W6VUW7AVir/pdv+LmX239+mt//xoYyu3r0DctBOMbQQzOonZPIm9d4q9Rb2cX5XkaaQSjdXKSeA4ef0GbsuVogdF4c6tCgdB04t89/1O/w1cDnyilFU=";
-
-    private readonly string channelSecret = "5d469dd2851c6ea2de6ce57c543fff07";
     private readonly ILogger<LineBotService> _logger;
+    private readonly IConfiguration _configuration;
 
     private readonly string replyMessageUri = "https://api.line.me/v2/bot/message/reply";
     private readonly string broadcastMessageUri = "https://api.line.me/v2/bot/message/broadcast";
     private static HttpClient client = new HttpClient(); // 負責處理HttpRequest
     private readonly JsonProvider _jsonProvider = new JsonProvider();
 
-    public LineBotService(ILogger<LineBotService> logger)
+    public LineBotService(ILogger<LineBotService> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
     }
 
     public void ReceiveWebhook(WebhookRequestBodyDto requestBody)
@@ -84,7 +82,7 @@ public class LineBotService : ILineBotService
     {
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", channelAccessToken); //帶入 channel access token
+            new AuthenticationHeaderValue("Bearer", _configuration.GetValue<string>("LineBot:ChannelAccessToken")); //帶入 channel access token
         var json = _jsonProvider.Serialize(request);
         var requestMessage = new HttpRequestMessage
         {
