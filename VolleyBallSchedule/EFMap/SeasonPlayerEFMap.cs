@@ -32,5 +32,9 @@ public class SeasonPlayerEFMap : IEntityTypeConfiguration<SeasonPlayers>
         builder.Property(x => x.LineId)
             .HasColumnName("line_uid")
             .IsRequired();
+        
+        builder.Property(x => x.CreatedTime)
+            .HasColumnName("created_time")
+            .IsRequired();
     }
 }

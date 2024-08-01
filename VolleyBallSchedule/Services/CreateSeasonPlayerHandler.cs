@@ -25,7 +25,8 @@ public class CreateSeasonPlayerHandler : IRequestHandler<CreateSeasonPlayerReque
             Name = request.Name,
             Gender = request.Gender,
             Status = (int)SeasonPlayerEnum.Active,
-            LineId = request.LineId
+            LineId = request.LineId,
+            CreatedTime = DateTimeOffset.Now.DateTime
         };
         
         var result = _seasonPlayerRepo.AddPlayer(seasonPlayer).Result;

@@ -40,7 +40,7 @@ public class LineBotService : ILineBotService
                         var request = new CreateSeasonPlayerRequest()
                         {
                             Name = name,
-                            Gender = obj.Message.Text.Contains("男") ? 1 : 0,
+                            Gender = obj.Message.Text.Contains((string)MessageKeywordEnum.Man) ? 1 : 0,
                             LineId = obj.Source.UserId
                         };
                         var result = _mediator.Send(request).Result;
@@ -54,7 +54,18 @@ public class LineBotService : ILineBotService
                                 break;
                         }
                     }
-                    
+
+                    if (obj.Message.Text.Contains(MessageKeywordEnum.Attending))
+                    {
+                        var request = new AddAttendRecordRequest()
+                        {
+                            LineId = obj.Source.UserId
+                        };
+
+                        var result = _mediator.Send(request).Result;
+                        ReplyMessageHandler("text", SetReplyMsg(obj.ReplyToken, result.Msg));
+                    }
+
                     break;
                 case WebhookEventTypeEnum.Unsend:
                     _logger.LogInformation(@"User {obj.Source.UserId} unsend message");
@@ -94,7 +105,8 @@ public class LineBotService : ILineBotService
     {
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", _configuration.GetValue<string>("LineBot:ChannelAccessToken")); //帶入 channel access token
+            new AuthenticationHeaderValue("Bearer",
+                _configuration.GetValue<string>("LineBot:ChannelAccessToken")); //帶入 channel access token
         var json = _jsonProvider.Serialize(request);
         var requestMessage = new HttpRequestMessage
         {
@@ -119,6 +131,6 @@ public class LineBotService : ILineBotService
                     Text = text
                 }
             }
-        }; 
+        };
     }
 }

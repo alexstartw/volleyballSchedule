@@ -17,6 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddScoped<IPlayerRepo, PlayerRepo>();
 builder.Services.AddScoped<ISeasonPlayerRepo, SeasonPlayerRepo>();
+builder.Services.AddScoped<IAttendingListRepo, AttendingListRepo>();
 builder.Services.AddScoped<ILineBotService, LineBotService>();
 builder.Services.AddDbContext<PlayerContext>(options =>
 {
@@ -42,5 +43,5 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseRouting();
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 app.Run();

@@ -16,6 +16,8 @@ public class PlayerContext : DbContext
 
     public DbSet<SeasonPlayers> SeasonPlayers { get; set; }
     
+    public DbSet<AttendingList> AttendingList { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
