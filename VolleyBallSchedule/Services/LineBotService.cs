@@ -1,5 +1,7 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
+using MediatR;
 using VolleyBallSchedule.Enum;
 using VolleyBallSchedule.Models.Message;
 using VolleyBallSchedule.Models.Requests;
@@ -11,16 +13,18 @@ public class LineBotService : ILineBotService
 {
     private readonly ILogger<LineBotService> _logger;
     private readonly IConfiguration _configuration;
+    private readonly IMediator _mediator;
 
     private readonly string replyMessageUri = "https://api.line.me/v2/bot/message/reply";
     private readonly string broadcastMessageUri = "https://api.line.me/v2/bot/message/broadcast";
     private static HttpClient client = new HttpClient(); // 負責處理HttpRequest
     private readonly JsonProvider _jsonProvider = new JsonProvider();
 
-    public LineBotService(ILogger<LineBotService> logger, IConfiguration configuration)
+    public LineBotService(ILogger<LineBotService> logger, IConfiguration configuration, IMediator mediator)
     {
         _logger = logger;
         _configuration = configuration;
+        _mediator = mediator;
     }
 
     public void ReceiveWebhook(WebhookRequestBodyDto requestBody)
@@ -30,19 +34,27 @@ public class LineBotService : ILineBotService
             switch (obj.Type)
             {
                 case WebhookEventTypeEnum.Message:
-                    var replyMessage = new ReplyMessageRequestDto<TextMessageDto>
+                    if (obj.Message.Text.Contains(MessageKeywordEnum.Register))
                     {
-                        ReplyToken = obj.ReplyToken,
-                        Messages = new List<TextMessageDto>
+                        var name = obj.Message.Text.Split("-")[1];
+                        var request = new CreateSeasonPlayerRequest()
                         {
-                            new TextMessageDto
-                            {
-                                Text = "Hello, this is your message" + obj.Message.Text
-                            }
+                            Name = name,
+                            Gender = obj.Message.Text.Contains("男") ? 1 : 0,
+                            LineId = obj.Source.UserId
+                        };
+                        var result = _mediator.Send(request).Result;
+                        switch (result.Code)
+                        {
+                            case (int)HttpStatusCode.OK:
+                                ReplyMessageHandler("text", SetReplyMsg(obj.ReplyToken, $"{name}註冊成功"));
+                                break;
+                            case (int)HttpStatusCode.Conflict:
+                                ReplyMessageHandler("text", SetReplyMsg(obj.ReplyToken, $"{name}已經註冊過了"));
+                                break;
                         }
-                    };
-                    ReplyMessageHandler("text", replyMessage);
-                    _logger.LogInformation("Message event");
+                    }
+                    
                     break;
                 case WebhookEventTypeEnum.Unsend:
                     _logger.LogInformation(@"User {obj.Source.UserId} unsend message");
@@ -93,5 +105,20 @@ public class LineBotService : ILineBotService
 
         var response = await client.SendAsync(requestMessage);
         Console.WriteLine(await response.Content.ReadAsStringAsync());
+    }
+
+    private ReplyMessageRequestDto<TextMessageDto> SetReplyMsg(string replyToken, string text)
+    {
+        return new ReplyMessageRequestDto<TextMessageDto>
+        {
+            ReplyToken = replyToken,
+            Messages = new List<TextMessageDto>
+            {
+                new TextMessageDto
+                {
+                    Text = text
+                }
+            }
+        }; 
     }
 }

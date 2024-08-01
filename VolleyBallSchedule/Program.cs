@@ -16,7 +16,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.AddScoped<IPlayerRepo, PlayerRepo>();
-builder.Services.AddSingleton<ILineBotService, LineBotService>();
+builder.Services.AddScoped<ISeasonPlayerRepo, SeasonPlayerRepo>();
+builder.Services.AddScoped<ILineBotService, LineBotService>();
 builder.Services.AddDbContext<PlayerContext>(options =>
 {
     options.UseNpgsql("Host=192.168.50.50;Port=5432;Database=postgres;Username=postgres;Password=12345678;");
