@@ -9,27 +9,27 @@ namespace VolleyBallSchedule.Services;
 
 public class CreateSeasonPlayerHandler : IRequestHandler<CreateSeasonPlayerRequest, ApiResult>
 {
-    private readonly ISeasonPlayerRepo _seasonPlayerRepo;
+    private readonly IGroupPlayerRepo _groupPlayerRepo;
     private readonly ILogger<CreateSeasonPlayerHandler> _logger;
 
-    public CreateSeasonPlayerHandler(ISeasonPlayerRepo seasonPlayerRepo, ILogger<CreateSeasonPlayerHandler> logger)
+    public CreateSeasonPlayerHandler(IGroupPlayerRepo groupPlayerRepo, ILogger<CreateSeasonPlayerHandler> logger)
     {
-        _seasonPlayerRepo = seasonPlayerRepo;
+        _groupPlayerRepo = groupPlayerRepo;
         _logger = logger;
     }
 
     public Task<ApiResult> Handle(CreateSeasonPlayerRequest request, CancellationToken cancellationToken)
     {
-        var seasonPlayer = new SeasonPlayers
+        var seasonPlayer = new GroupPlayers
         {
             Name = request.Name,
             Gender = request.Gender,
-            Status = (int)SeasonPlayerEnum.Active,
+            Status = (int)GroupPlayerEnum.SeasonPlayer,
             LineId = request.LineId,
             CreatedTime = DateTimeOffset.Now.DateTime
         };
         
-        var result = _seasonPlayerRepo.AddPlayer(seasonPlayer).Result;
+        var result = _groupPlayerRepo.AddPlayer(seasonPlayer).Result;
         if (result == 0)
         {
             _logger.LogInformation($"Player {seasonPlayer.Name} already exists");

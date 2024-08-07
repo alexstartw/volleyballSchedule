@@ -4,16 +4,16 @@ using VolleyBallSchedule.Repos.Interfaces;
 
 namespace VolleyBallSchedule.Repos;
 
-public class SeasonPlayerRepo : ISeasonPlayerRepo
+public class GroupPlayerRepo : IGroupPlayerRepo
 {
     private readonly PlayerContext _context;
 
-    public SeasonPlayerRepo(PlayerContext context)
+    public GroupPlayerRepo(PlayerContext context)
     {
         _context = context;
     }
     
-    public async Task<int> AddPlayer(SeasonPlayers player)
+    public async Task<int> AddPlayer(GroupPlayers player)
     {
         if (CheckIfPlayerExists(player.LineId))
             return 0;
@@ -21,7 +21,7 @@ public class SeasonPlayerRepo : ISeasonPlayerRepo
         return await _context.SaveChangesAsync();
     }
     
-    public async Task<SeasonPlayers> GetPlayer(string lineId)
+    public async Task<GroupPlayers> GetPlayer(string lineId)
     {
         var player = await _context.SeasonPlayers.FirstOrDefaultAsync(e => e.LineId == lineId);
         return player ?? default;

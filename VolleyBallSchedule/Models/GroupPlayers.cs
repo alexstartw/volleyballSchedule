@@ -1,6 +1,6 @@
 ﻿namespace VolleyBallSchedule.Models;
 
-public class SeasonPlayers
+public class GroupPlayers
 {
     public int Id { get; set; }
     public string Name { get; set; }

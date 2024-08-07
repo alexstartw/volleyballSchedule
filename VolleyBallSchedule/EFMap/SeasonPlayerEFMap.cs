@@ -4,9 +4,9 @@ using VolleyBallSchedule.Models;
 
 namespace VolleyBallSchedule.EFMap;
 
-public class SeasonPlayerEFMap : IEntityTypeConfiguration<SeasonPlayers>
+public class SeasonPlayerEFMap : IEntityTypeConfiguration<GroupPlayers>
 {
-    public void Configure(EntityTypeBuilder<SeasonPlayers> builder)
+    public void Configure(EntityTypeBuilder<GroupPlayers> builder)
     {
         builder.ToTable("season_players");
         

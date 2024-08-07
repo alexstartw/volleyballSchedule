@@ -33,5 +33,9 @@ public class AttendingListEFMap : IEntityTypeConfiguration<AttendingList>
         builder.Property(x => x.UpdateTime)
             .HasColumnName("update_time")
             .IsRequired();
+
+        builder.Property(x => x.AttendingStatus)
+            .HasColumnName("status")
+            .IsRequired();
     }
 }

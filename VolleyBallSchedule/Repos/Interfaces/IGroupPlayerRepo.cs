@@ -2,9 +2,9 @@
 
 namespace VolleyBallSchedule.Repos.Interfaces;
 
-public interface ISeasonPlayerRepo
+public interface IGroupPlayerRepo
 {
-    Task<int> AddPlayer(SeasonPlayers? player);
-    Task<SeasonPlayers> GetPlayer(string lineId);
+    Task<int> AddPlayer(GroupPlayers? player);
+    Task<GroupPlayers> GetPlayer(string lineId);
     bool CheckIfPlayerExists(string lineId);
 }

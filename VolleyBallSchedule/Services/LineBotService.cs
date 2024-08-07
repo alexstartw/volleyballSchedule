@@ -55,11 +55,23 @@ public class LineBotService : ILineBotService
                         }
                     }
 
-                    if (obj.Message.Text.Contains(MessageKeywordEnum.Attending))
+                    if (obj.Message.Text.Contains(MessageKeywordEnum.Attending) && !obj.Message.Text.Contains(MessageKeywordEnum.Absent))
                     {
                         var request = new AddAttendRecordRequest()
                         {
                             LineId = obj.Source.UserId
+                        };
+
+                        var result = _mediator.Send(request).Result;
+                        ReplyMessageHandler("text", SetReplyMsg(obj.ReplyToken, result.Msg));
+                    }
+
+                    if (obj.Message.Text.Contains(MessageKeywordEnum.Absent))
+                    {
+                        var request = new AddAbsentRecordRequest()
+                        {
+                            LineId = obj.Source.UserId,
+                            Message = obj.Message.Text
                         };
 
                         var result = _mediator.Send(request).Result;
