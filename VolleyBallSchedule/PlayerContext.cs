@@ -18,6 +18,8 @@ public class PlayerContext : DbContext
     
     public DbSet<AttendingList> AttendingList { get; set; }
     
+    public DbSet<TempPlayerList> TempPlayerList { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
